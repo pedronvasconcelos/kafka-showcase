@@ -22,7 +22,8 @@ public class WeatherMockService : IWeatherService
             Temperature = _faker.Random.Int(0, 100),
             Humidity = _faker.Random.Int(0, 100),
             Conditions = GetFakeCondition(_faker.Random.Int(0, 4)),
-            Timestamp = DateTime.Now.ToUniversalTime()
+            Timestamp = DateTime.Now.ToUniversalTime(),
+            IdempotencyKey = Guid.NewGuid().ToString(),
         };
     }
 

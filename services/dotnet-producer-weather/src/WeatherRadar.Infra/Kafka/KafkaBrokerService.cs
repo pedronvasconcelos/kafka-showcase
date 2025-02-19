@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Options;
-using WeatherRadar.Application.Interfaces;
+using WeatherRadar.Application.MessageBroker;
 
 namespace WeatherRadar.Infra.Kafka;
 
