@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka;
+﻿using System.Text;
+using Confluent.Kafka;
 using Microsoft.Extensions.Options;
 using WeatherRadar.Application.MessageBroker;
 
@@ -19,9 +20,12 @@ public class KafkaBrokerService : IMessageBrokerService
         _topicName = kafkaConfig.Value.TopicName;   
     }
 
-    public async Task SendMessageAsync(string message)
+    public async Task SendMessageAsync(string message, string idempotencyKey)
     {
-        var response = await _producer.ProduceAsync(_topicName, new Message<Null, string> { Value = message });
+
+        var headers = new Headers();
+        headers.Add("idempotency-key", Encoding.UTF8.GetBytes(idempotencyKey));
+        var response = await _producer.ProduceAsync(_topicName, new Message<Null, string> { Value = message, Headers = headers});
 
         response.Message.ToString();
     }

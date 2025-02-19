@@ -11,15 +11,18 @@ public class WeatherProducerService : BackgroundService
     private readonly IWeatherService _service;
     private readonly IMessageBrokerService _messageBrokerService;
     private readonly IIdempotencyService _idempotencyService;
+    private readonly IWeatherRawRepository _rawRepository;
 
 
     public WeatherProducerService(IWeatherService service, 
         IMessageBrokerService messageBrokerService,
-        IIdempotencyService idempotencyService)
+        IIdempotencyService idempotencyService,
+        IWeatherRawRepository rawRepository)
     {
         _service = service;
         _messageBrokerService = messageBrokerService;
         _idempotencyService = idempotencyService;
+        _rawRepository = rawRepository;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -37,13 +40,13 @@ public class WeatherProducerService : BackgroundService
     {
         var weather = await _service.GetWeatherData(1, 1);
 
-        var idempotencyKey = weather.IdempotencyKey;
+        var idempotencyKey = Guid.NewGuid().ToString();
         var weatherString = JsonSerializer.Serialize(weather);
 
         var idempotencyRecord = new Idempotency(idempotencyKey, weatherString);
-        
+        await _rawRepository.SaveRawData(weather);
         await _idempotencyService.AddIdempotencyAsync(idempotencyRecord);   
-        await _messageBrokerService.SendMessageAsync( weatherString);
+        await _messageBrokerService.SendMessageAsync(weatherString, idempotencyKey);
         
     }
 }

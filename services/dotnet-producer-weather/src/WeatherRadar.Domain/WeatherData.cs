@@ -9,5 +9,4 @@ public record WeatherData
     public int Humidity { get; init; }
     public string Conditions { get; init; }
     public DateTime Timestamp { get; init; }
-    public string IdempotencyKey { get; init; }
 }

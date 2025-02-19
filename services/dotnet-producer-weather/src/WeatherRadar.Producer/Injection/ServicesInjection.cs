@@ -9,6 +9,7 @@ using WeatherRadar.Domain;
 using WeatherRadar.Infra.DynamoDB;
 using WeatherRadar.Infra.Kafka;
 using WeatherRadar.Infra.Mock;
+using WeatherRadar.Infra.Sql;
 using WeatherRadar.Producer.WorkerServices;
 
 namespace WeatherRadar.Producer.Injection;
@@ -44,5 +45,15 @@ public static class ServicesInjection
     
         return services;
     }
-    
+
+    public static IServiceCollection AddPostgreSQL(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+
+        var connectionString = configuration.GetConnectionString("MongoDB");
+        services.AddScoped<IWeatherRawRepository, WeatherRawRepository>(sp =>
+            new WeatherRawRepository(connectionString));
+        return services;
+    }
+
 }

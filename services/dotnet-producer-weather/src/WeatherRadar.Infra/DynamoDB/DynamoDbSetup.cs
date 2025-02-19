@@ -40,12 +40,12 @@ public static class DynamoDbSetup
                 }
             };
 
-            await dynamoDbClient.CreateTableAsync(request);
+            var response = await dynamoDbClient.CreateTableAsync(request);
             await WaitUntilTableReady(dynamoDbClient);
         }
-        catch (ResourceInUseException)
+        catch (ResourceInUseException ex)
         {
-            // Tabela já existe
+            ex.ToString();
         }
     }
 
@@ -77,7 +77,7 @@ public static class DynamoDbSetup
 
         if (status != "ACTIVE")
         {
-            throw new TimeoutException($"Tabela {TableName} não ficou ativa após {maxRetries} tentativas");
+            throw new TimeoutException($"Unable to activate table '{TableName}' - maximum retry limit ({maxRetries}) exceeded");
         }
     }
 }

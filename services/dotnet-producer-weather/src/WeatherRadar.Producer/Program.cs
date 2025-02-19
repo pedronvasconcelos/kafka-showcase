@@ -19,7 +19,8 @@ internal class Program
 
         builder.AddConfig();
         builder.Services.AddServices()
-            .AddDynamoDb(builder.Configuration);
+            .AddDynamoDb(builder.Configuration)
+            .AddPostgreSQL(builder.Configuration);
 
         var host = builder.Build();
         using (var scope = host.Services.CreateScope())
