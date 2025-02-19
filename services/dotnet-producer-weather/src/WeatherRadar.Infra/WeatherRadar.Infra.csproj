@@ -6,4 +6,15 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Bogus" Version="35.6.1" />
+      <PackageReference Include="Confluent.Kafka" Version="2.8.0" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WeatherRadar.Application\WeatherRadar.Application.csproj" />
+      <ProjectReference Include="..\WeatherRadar.Domain\WeatherRadar.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
