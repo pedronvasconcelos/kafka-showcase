@@ -1,8 +1,11 @@
 package dev.vasconcelos.weather.validator.application.consumer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.vasconcelos.weather.validator.application.idempotency.Idempotency;
 import dev.vasconcelos.weather.validator.application.idempotency.IdempotencyService;
 import dev.vasconcelos.weather.validator.application.idempotency.IdempotencyStepConstants;
+import dev.vasconcelos.weather.validator.domain.WeatherData;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,7 @@ public class WeatherValidationConsumer {
     private static final String IDEMPOTENCY_HEADER = "idempotency-key";
     private final Logger logger = LoggerFactory.getLogger(WeatherValidationConsumer.class);
     private final IdempotencyService idempotencyService;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public WeatherValidationConsumer(IdempotencyService idempotencyService) {
         this.idempotencyService = idempotencyService;
@@ -67,15 +71,19 @@ public class WeatherValidationConsumer {
     }
 
     private void processWeatherData(String weatherData) {
-        validateWeatherData(weatherData);
+        var weather = parseWeatherData(weatherData);
     }
 
     private void updateIdempotency(Idempotency idempotency){
         idempotencyService.updateIdempotency(idempotency);
     }
 
-    private void validateWeatherData(String weatherData) {
-        // Implementation of weather data validation
-        logger.debug("Validating weather data: {}", weatherData);
+    private WeatherData parseWeatherData(String weatherData)  {
+        try{
+             return objectMapper.readValue(weatherData, WeatherData.class);
+        }
+        catch(JsonProcessingException ex){
+            return null;
+        }
     }
 }

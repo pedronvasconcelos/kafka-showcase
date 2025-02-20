@@ -3,7 +3,6 @@ package dev.vasconcelos.weather.validator.application.idempotency;
 import dev.vasconcelos.weather.validator.infra.dynamodb.IdempotencyEntity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Idempotency {
@@ -24,8 +23,6 @@ public class Idempotency {
     public IdempotencyStatus getStatus() {
         return status;
     }
-
-
 
     public String getPayloadHash() {
         return payloadHash;

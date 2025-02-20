@@ -29,7 +29,7 @@ public class IdempotencyService {
         }
     }
 
-    public boolean updateIdempotency(Idempotency idempotency) {
+    public void updateIdempotency(Idempotency idempotency) {
         try {
             IdempotencyEntity entity = new IdempotencyEntity(idempotency);
 
@@ -40,9 +40,7 @@ public class IdempotencyService {
                                     .withValue(new AttributeValue().withS(idempotency.getIdempotencyKey())));
 
             dynamoDBMapper.save(entity, saveExpression);
-            return true;
         } catch (ConditionalCheckFailedException e) {
-            return false;
         } catch (AmazonDynamoDBException e) {
             throw new RuntimeException("Failed to update idempotency record", e);
         }
