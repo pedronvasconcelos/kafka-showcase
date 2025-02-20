@@ -4,20 +4,14 @@ public class Idempotency
 {
     public string IdempotencyKey { get; set; }
     public IdempotencyStatus Status { get; set; }
-    public DateTime ExpiryTimestamp { get; set; }
     public string PayloadHash { get; set; }
-    public int ExpireMinutes { get; set; } = 60;
-    
     public List<string> StepsCompleted { get; set; }
-
 
     public Idempotency(string idempotencyKey, string jsonPayload)
     {
         IdempotencyKey = idempotencyKey;
         Status = IdempotencyStatus.InProgress;
-        ExpiryTimestamp = DateTime.UtcNow.AddMinutes(ExpireMinutes);
         PayloadHash = CalculateHash(jsonPayload);
-        ExpireMinutes = 60;
         StepsCompleted = new List<string>() { IdempotencyStepConstants.ProducerStep };
     }
 

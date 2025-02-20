@@ -11,15 +11,10 @@ public class IdempotencyDynamoEntity
     [DynamoDBProperty("status")] 
     public string Status { get; set; }
 
-    [DynamoDBProperty("expiry_timestamp")]
-    public DateTime ExpiryTimestamp { get; set; }
-
+  
     [DynamoDBProperty("payload_hash")]
     public string PayloadHash { get; set; }
-
-    [DynamoDBProperty("expire_minutes")]
-    public int ExpireMinutes { get; set; }
-
+    
     [DynamoDBProperty("steps_completed")]
     public List<string> StepsCompleted { get; set; }
 
@@ -30,10 +25,8 @@ public class IdempotencyDynamoEntity
         {
             IdempotencyKey = domain.IdempotencyKey,
             Status = domain.Status.ToString(),
-            ExpiryTimestamp = domain.ExpiryTimestamp,
-            PayloadHash = domain.PayloadHash,
-            ExpireMinutes = domain.ExpireMinutes,
-            StepsCompleted = domain.StepsCompleted
+             PayloadHash = domain.PayloadHash,
+             StepsCompleted = domain.StepsCompleted
         };
     }
 }

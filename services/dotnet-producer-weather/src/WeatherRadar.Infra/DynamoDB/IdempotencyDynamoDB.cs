@@ -29,9 +29,7 @@ public class IdempotencyDynamoDb : IIdempotencyService
             {
                 [IdempotencyKeyAttribute] = new AttributeValue { S = entity.IdempotencyKey.ToString() },
                 ["status"] = new AttributeValue { S = entity.Status.ToString() },
-                ["expiry_timestamp"] = new AttributeValue { N = ((DateTimeOffset)entity.ExpiryTimestamp).ToUnixTimeSeconds().ToString() },
                 ["payload_hash"] = new AttributeValue { S = entity.PayloadHash },
-                ["expire_minutes"] = new AttributeValue { N = entity.ExpireMinutes.ToString(CultureInfo.InvariantCulture) },
                 ["steps_completed"] = new AttributeValue { SS = entity.StepsCompleted }
             },
             ConditionExpression = $"attribute_not_exists({IdempotencyKeyAttribute})"
