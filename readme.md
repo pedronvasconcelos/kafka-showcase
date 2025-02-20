@@ -44,7 +44,7 @@ flowchart TD
 ### 2. Java Validation Service
 **Responsibility**: Extreme weather detection  
 **Tech Stack**:
-- Spring Boot 3
+- Spring 
 - Kafka Streams
 - PostgreSQL
 
