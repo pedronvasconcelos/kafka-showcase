@@ -18,13 +18,13 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 public class WeatherValidationConsumer {
     private static final String TOPIC = "${kafka.topics.weather-data}";
-    private static final String IDEMPOTENCY_HEADER = "idempotency-key";
-    private final Logger logger = LoggerFactory.getLogger(WeatherValidationConsumer.class);
+     private final Logger logger = LoggerFactory.getLogger(WeatherValidationConsumer.class);
     private final IdempotencyService idempotencyService;
     private final ObjectMapper objectMapper;
 
@@ -46,17 +46,18 @@ public class WeatherValidationConsumer {
     )
     public void consume(
             @Payload String payload,
-            @Header(KafkaHeaders.RECEIVED_KEY) String key,
-            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
-            @Header(KafkaHeaders.RECEIVED_PARTITION) Integer partition,
+
             @Header(KafkaHeaders.OFFSET) Long offset,
-            @Header(name = IDEMPOTENCY_HEADER, required = false) String idempotencyKey,
+            @Header(name = "idempotency-key", required = false) byte[] idempotencyKeyBytes,
             Acknowledgment acknowledgment) {
-
+        String idempotencyKey = idempotencyKeyBytes != null ?
+                new String(idempotencyKeyBytes, StandardCharsets.UTF_8) : null;
         try {
-            logger.info("Received message: topic={}, partition={}, offset={}, key={}",
-                    topic, partition, offset, key);
 
+
+
+            logger.info("Received message: idempotency-key={}, offset={}",
+                    idempotencyKey,  offset );
             if (idempotencyKey == null || idempotencyKey.isEmpty()) {
                 logger.error("Missing idempotency-key header");
                 acknowledgment.acknowledge();
@@ -65,14 +66,12 @@ public class WeatherValidationConsumer {
 
             processMessageWithIdempotency(payload, idempotencyKey);
 
-            // Commit offset after successful processing
-            acknowledgment.acknowledge();
+             acknowledgment.acknowledge();
 
         } catch (Exception e) {
-            logger.error("Error processing weather data from topic={}, partition={}, offset={}",
-                    topic, partition, offset, e);
-            // Don't acknowledge - will be retried based on @Retryable annotation
-            throw e;
+            logger.info("Error message: idempotency-key={}, offset={}",
+                    idempotencyKey,  offset );
+             throw e;
         }
     }
 

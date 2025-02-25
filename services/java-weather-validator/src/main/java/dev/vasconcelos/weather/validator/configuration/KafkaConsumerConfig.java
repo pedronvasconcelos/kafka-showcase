@@ -1,7 +1,7 @@
 package dev.vasconcelos.weather.validator.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import dev.vasconcelos.weather.validator.application.consumer.WeatherValidationConsumer;
 import dev.vasconcelos.weather.validator.application.idempotency.IdempotencyService;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -66,7 +66,7 @@ public class KafkaConsumerConfig {
          DefaultErrorHandler errorHandler = new DefaultErrorHandler(
                 new FixedBackOff(1000L, 3));
         factory.setCommonErrorHandler(errorHandler);
-
+        factory.setMissingTopicsFatal(false);
         return factory;
     }
 
