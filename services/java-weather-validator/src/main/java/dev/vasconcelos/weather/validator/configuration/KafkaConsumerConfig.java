@@ -1,6 +1,9 @@
 package dev.vasconcelos.weather.validator.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.vasconcelos.weather.validator.domain.ValidatorService;
+import dev.vasconcelos.weather.validator.domain.WeatherAnomalyRepository;
+import dev.vasconcelos.weather.validator.domain.WeatherRepository;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import dev.vasconcelos.weather.validator.application.consumer.WeatherValidationConsumer;
 import dev.vasconcelos.weather.validator.application.idempotency.IdempotencyService;
@@ -73,7 +76,9 @@ public class KafkaConsumerConfig {
     @Bean
     public WeatherValidationConsumer weatherValidationConsumer(
             IdempotencyService idempotencyService,
-            ObjectMapper objectMapper) {
-        return new WeatherValidationConsumer(idempotencyService, objectMapper);
+            ObjectMapper objectMapper,
+            WeatherRepository weatherRepository,
+            WeatherAnomalyRepository anomalyRepository) {
+        return new WeatherValidationConsumer(idempotencyService, objectMapper, weatherRepository, anomalyRepository);
     }
 }
