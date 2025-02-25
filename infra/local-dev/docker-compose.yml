@@ -45,9 +45,24 @@ services:
     networks:
       - app-network
 
+  postgres:
+    image: postgres:14
+    container_name: postgres-weather-data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./databases/postgres-init:/docker-entrypoint-initdb.d  
+    networks:
+      - app-network    
+
 networks:
   app-network:
     driver: bridge
 
 volumes:
   mongodb_data:
+  postgres_data:

@@ -1,7 +1,9 @@
-package dev.vasconcelos.weather.validator.infra.sql;
+package dev.vasconcelos.weather.validator.infra.sql.repositories;
 
 import dev.vasconcelos.weather.validator.domain.WeatherData;
 import dev.vasconcelos.weather.validator.domain.WeatherRepository;
+import dev.vasconcelos.weather.validator.infra.sql.WeatherDataEntity;
+import dev.vasconcelos.weather.validator.infra.sql.WeatherDataMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import java.sql.Timestamp;
@@ -36,7 +38,6 @@ public class WeatherRepositoryImpl implements WeatherRepository {
                 entity.getConditions(),
                 Timestamp.valueOf(entity.getTimestamp())
         );
-
         return weatherData;
     }
 
