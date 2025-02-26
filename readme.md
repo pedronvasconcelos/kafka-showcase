@@ -132,7 +132,7 @@ cd services/java-weather-validator
 
 ## Project Status
 
-- ✅ .NET Producer Service (complete)
+- ✅ .NET Producer Service (complete - mocking weather api for now)
 - ✅ Java Validator Service (complete)
 - 🚧 Kotlin Enrichment Service (pending)
 - 🚧 Scala Analytics Service (pending)
